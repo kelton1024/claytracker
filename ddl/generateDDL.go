@@ -1,20 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"path"
 	"slices"
 	"strings"
-)
-
-const (
-	jsonDirectory = "../json/"
-	ddlDirectory  = "./"
-	databaseName  = "range_tracker"
 )
 
 var typeMappings = map[string]string{
@@ -55,8 +47,8 @@ func gatherFiles() ([]string, error) {
 	return schemaFiles, nil
 }
 
-func createDDL(schemaContent *Schema) ([]byte, error) {
-	var strBuilder bytes.Buffer
+func createDDL(schemaContent *Schema) (string, error) {
+	var strBuilder strings.Builder
 	strBuilder.WriteString(fmt.Sprintf("---- Table: %v\n", schemaContent.Id))
 	strBuilder.WriteString(fmt.Sprintf("DROP TABLE IF EXISTS %v CASCADE;\n", schemaContent.Id))
 	strBuilder.WriteString(fmt.Sprintf("CREATE TABLE %v\n(\n", schemaContent.Id))
@@ -65,14 +57,14 @@ func createDDL(schemaContent *Schema) ([]byte, error) {
 	for key, value := range schemaContent.Properties {
 		sqlType, ok := typeMappings[value.Type]
 		if !ok {
-			return nil, fmt.Errorf("encountered unknown type '%v'", value.Type)
+			return "", fmt.Errorf("encountered unknown type '%v'", value.Type)
 		}
 
 		if value.Comment != "" {
 			sqlType = value.Comment
 		}
 
-		columnData := fmt.Sprintf("\t%v %v\n", key, sqlType)
+		columnData := fmt.Sprintf("\t%v %v,\n", key, sqlType)
 		if strings.Contains(sqlType, "primary key") {
 			pk = append(pk, columnData)
 			continue
@@ -82,50 +74,52 @@ func createDDL(schemaContent *Schema) ([]byte, error) {
 			continue
 		}
 		reg = append(reg, columnData)
-
 	}
 
+	// Since the order of maps are not deterministic, we will sort so we are consistent after each run
+	slices.Sort(pk)
+	slices.Sort(reg)
+	slices.Sort(fk)
 	combinedSQL := slices.Concat(pk, reg, fk)
-	for _, column := range combinedSQL {
+	for i, column := range combinedSQL {
+		if i == len(combinedSQL)-1 {
+			column = strings.ReplaceAll(column, ",", "")
+		}
 		strBuilder.WriteString(column)
 	}
 
 	strBuilder.WriteString(");\n\n")
-	return strBuilder.Bytes(), nil
+	return strBuilder.String(), nil
 }
 
-func main() {
+func generateDDL() ([]string, error) {
+	var ddl []string
+	ddl = append(ddl, fmt.Sprintf("----Drop Database\nDROP DATABASE IF EXISTS %v;\n", databaseName))
+	ddl = append(ddl, fmt.Sprintf("CREATE DATABASE %v;\n\n", databaseName))
+
 	schemaFiles, err := gatherFiles()
 	if err != nil {
-		log.Fatalf("failed to read directory '%v' with the following error %v", jsonDirectory, err)
+		return nil, err
 	}
-
-	outputFile, err := os.Create("gen_range_tracker_relational_model.sql")
-	if err != nil {
-		log.Fatalf("failed to create the output file")
-	}
-	dropDDL := fmt.Sprintf("DROP DATABASE IF EXISTS %v CASCADE;\nCREATE DATABASE %v\n\n", databaseName, databaseName)
-	outputFile.Write([]byte(dropDDL))
 
 	for _, file := range schemaFiles {
 		fullPath := path.Join(jsonDirectory, file)
 		fileContent, err := os.ReadFile(fullPath)
 		if err != nil {
-			fmt.Printf("failed to read file contents for file '%v' with error %v\n", file, err)
-			continue
+			return nil, err
 		}
 
 		schemaContent := Schema{}
 		err = json.Unmarshal(fileContent, &schemaContent)
 		if err != nil {
-			fmt.Printf("failed to unmarhsal file content for file '%v' with error %v\n", file, err)
-			continue
+			return nil, err
 		}
 
 		generatedSQL, err := createDDL(&schemaContent)
 		if err != nil {
-			fmt.Printf("failed to create DDL using file '%v' with error %v\n", file, err)
+			return nil, err
 		}
-		outputFile.Write(generatedSQL)
+		ddl = append(ddl, generatedSQL)
 	}
+	return ddl, nil
 }

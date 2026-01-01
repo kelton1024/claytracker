@@ -8,9 +8,9 @@
         "contestant_username": {
             "description": "The name of the contestant",
             "type": "string",
-            "$comment": "primary key"
+            "$comment": "text primary key"
         },
-        "password": {
+        "contestant_password": {
             "description": "The contestant's password",
             "type": "string"
         },
