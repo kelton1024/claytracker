@@ -1,0 +1,10 @@
+{
+    "$schema": "./range.json",
+    "range_id": 0,
+    "range_name": "Example",
+    "range_address1": "1234 Example",
+    "range_address2": "1234 Example",
+    "range_city": "Example",
+    "range_state_id": 0,
+    "range_zip": 12345
+}

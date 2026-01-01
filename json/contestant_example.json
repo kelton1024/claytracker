@@ -1,0 +1,7 @@
+{
+    "$schema": "./contestant.json",
+    "contestant_username": "1",
+    "password": "123456789",
+    "contestant_first_name": "John",
+    "contestant_last_name": "Doe"
+}

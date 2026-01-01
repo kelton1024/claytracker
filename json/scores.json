@@ -1,0 +1,40 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "scores_tracking",
+    "title": "Scores",
+    "description": "Validates that the scores are returned in a consistent format",
+    "type": "object",
+    "properties": {
+        "score_id": {
+            "description": "Unique identifier associated with score",
+            "type": "number",
+            "$comment": "smallint primary key generated always as identity"
+        },
+        "contestant_username": {
+            "description": "Reference to the name of the contestant",
+            "type": "string",
+            "$comment": "references range_contestant(contestant_username)"
+        },
+        "range_id": {
+            "description": "Reference to unique identifier for the range",
+            "type": "number",
+            "$comment": "smallint references ranges(range_id)"
+        },
+        "range_date": {
+            "description": "Date/time for when the scores were recorded",
+            "type": "string",
+            "format": "date-time"
+        },
+        "station_number": {
+            "description": "The station number",
+            "type": "number",
+            "$comment": "smallint"
+        },
+        "score": {
+            "description": "The score at a particular station",
+            "type": "number",
+            "$comment": "smallint"
+        }
+    }, "required": ["score_id", "contestant_username", "range_id", "range_date", "station_number", "score"],
+    "additionalProperties": false
+}

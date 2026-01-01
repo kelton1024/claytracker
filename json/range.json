@@ -1,0 +1,41 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "ranges",
+    "title": "Range",
+    "description": "Validates that the range are returned in a consistent format",
+    "type": "object",
+    "properties": {
+        "range_id": {
+            "description": "Unique identifier for the range",
+            "type": "number",
+            "$comment": "smallint primary key generated always as identity"
+        },
+        "range_name": {
+            "description": "Name of the range",
+            "type": "string"
+        },
+        "range_address1": {
+            "description": "Address #1 for the range",
+            "type": "string"
+        },
+        "range_address2": {
+            "description": "Address #2 for the range",
+            "type": "string"
+        },
+        "range_city": {
+            "description": "The city where the range is located",
+            "type": "string"
+        },
+        "range_state_id": {
+            "description": "Unique ID associated to state",
+            "type": "number",
+            "$comment": "smallint references us_states(state_id)"
+        },
+        "range_zip": {
+            "description": "The zipcode associated with the range",
+            "type": "number",
+            "$comment": "number(5)"
+        }
+    }, "required": ["range_id", "range_name", "range_address1", "range_city", "range_state_id", "range_zip"],
+    "additionalProperties": false
+}
