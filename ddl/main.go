@@ -8,7 +8,6 @@ import (
 const (
 	outputFileName  = "gen_range_tracker_relational_model.sql"
 	jsonDirectory   = "../json/"
-	ddlDirectory    = "./"
 	databaseName    = "range_tracker"
 	rootDatabaseURL = "postgres://postgres:mysecretpassword@localhost:5432"
 )
