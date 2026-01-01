@@ -34,7 +34,7 @@
         "range_zip": {
             "description": "The zipcode associated with the range",
             "type": "number",
-            "$comment": "number(5)"
+            "$comment": "numeric(5)"
         }
     }, "required": ["range_id", "range_name", "range_address1", "range_city", "range_state_id", "range_zip"],
     "additionalProperties": false
