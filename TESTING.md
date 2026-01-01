@@ -29,3 +29,22 @@ go run main.go create
 ```
 
 It should be noted that main.go will use "localhost:5432" as the host. 
+
+# Validate
+```bash
+podman exec -it postgres /bin/sh
+```
+
+```bash
+su - postgres
+```
+
+```bash
+psql
+```
+
+```bash
+\l # List databases
+\c <DB Name> # Change to database
+\dt # List tables
+```
