@@ -1,0 +1,19 @@
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    image: docker.io/postgres:18
+    restart: always
+    environment:
+      - POSTGRES_USER=USER # change
+      - POSTGRES_PASSWORD=PASSWORD # change
+      - POSTGRES_DB=clays01d
+    volumes:
+      - ./data:/var/lib/postgresql:Z

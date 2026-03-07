@@ -5,18 +5,11 @@ import (
 	"net/http"
 )
 
+// TODO: read these in from conf/env var
 const (
 	address = ":8080"
-	dbPath  = "/tmp/rocksdb_database"
+	db_name = "clays01d"
 )
-
-func init() {
-	db := C.CString(dbPath)
-	cValue := C.init(db)
-	if int(cValue) != 0 {
-		panic("failed to initialize database")
-	}
-}
 
 func loggerMiddleware(endpoint http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -28,8 +21,8 @@ func loggerMiddleware(endpoint http.HandlerFunc) http.HandlerFunc {
 func main() {
 	log.Println("Starting API...")
 	mux := http.NewServeMux()
-	// TODO: Add update/delete endpoints
-	mux.HandleFunc("/query", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
-	mux.HandleFunc("/insert", loggerMiddleware(http.HandlerFunc(insertEndpoint)))
+	// TODO: Add update/delete endpoints and define them
+	// mux.HandleFunc("/query", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
+	// mux.HandleFunc("/insert", loggerMiddleware(http.HandlerFunc(insertEndpoint)))
 	http.ListenAndServe(address, mux)
 }

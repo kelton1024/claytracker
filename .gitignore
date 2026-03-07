@@ -5,3 +5,4 @@ rocksdb/
 example
 node_modules/
 .vite/
+data/
