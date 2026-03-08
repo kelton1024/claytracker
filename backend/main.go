@@ -3,19 +3,26 @@ package main
 import (
 	"log"
 	"net/http"
+	"fmt"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/spf13/viper"
 )
 
-// TODO: read these in from conf/env var using viper
-const (
-	address         = ":8080"
-	db_name         = "range_tracker"
-	rootDatabaseURL = "postgres://postgres:mysecretpassword@localhost:5432/range_tracker"
-)
+type Config struct{
+	App struct {
+		PORT     string
+	}
+	Database struct {
+		HOST     string
+		PORT     string
+		NAME     string
+		USER     string
+		PASSWORD string
+	}
+}
 
-// TODO: Create a database struct to hold the connections and that can be used by
-// the various endpoints
+
 var dbConn *pgx.Conn
 
 // TODO: Add update/delete endpoints and define them
@@ -29,14 +36,34 @@ func registerEndpoints() *http.ServeMux {
 }
 
 func main() {
-	log.Printf("Starting API on port %v", address)
+	// Set up viper to read config file
+	viper.SetConfigName("config.yaml")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
 
-	var err error
+	// Read config file
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Fatalf("Error reading config file: %v", err)
+	}
+	
+	// Get values that match config struct from file
+	var config Config
+	err = viper.Unmarshal(&config)
+	if err != nil {
+		log.Fatalf("Error reading config file: %v", err)
+	}
+
+
+	log.Printf("Connecting to datatbase at %s:%s as %s", config.Database.HOST, config.Database.PORT, config.Database.USER)
+	rootDatabaseURL := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", config.Database.USER, config.Database.PASSWORD, config.Database.HOST, config.Database.PORT, config.Database.NAME)
+
 	dbConn, err = NewDBConnection(rootDatabaseURL)
 	if err != nil {
 		log.Fatalf("failed to create DB connection %v", err)
 	}
 
+	log.Printf("Starting API on port %v", config.App.PORT)
 	mux := registerEndpoints()
-	http.ListenAndServe(address, mux)
+	http.ListenAndServe(config.App.PORT, mux)
 }

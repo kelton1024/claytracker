@@ -9,6 +9,7 @@ RUN go build -o /app/backend/main .
 
 FROM debian:trixie-slim AS run
 COPY --from=build /app/backend/main /app/backend/main
+COPY backend/config.yaml /app/backend/config.yaml
 COPY json /app/json
 COPY ddl /app/ddl
 
