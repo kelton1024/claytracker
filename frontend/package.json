@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@tailwindcss/vite": "4.1.18",
-    "cesium": "1.136.0",
+    "cesium": "^1.139.1",
     "tailwindcss": "4.1.18",
     "vitest": "4.0.15"
   }

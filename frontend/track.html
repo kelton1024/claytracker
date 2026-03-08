@@ -15,11 +15,11 @@
         </ul>
     </nav>
     <div class="text-center">
-        <h1 class="text-5xl text-white mt-3">Station #1</h1>
+        <h1 class="text-5xl text-white mt-3">Station #<span id="station_number">1</span></h1>
         <div>
             <!-- TODO: Add actual buttons -->
-            <button class="text-white text-5xl">&lt</button>
-            <button class="text-white text-5xl">&gt</button>
+            <button id="prev_station" class="text-white text-5xl">&lt;</button>
+            <button id="next_station" class="text-white text-5xl">&gt;</button>
         </div>
     </div>
     <div class=" flex justify-center">
@@ -54,6 +54,7 @@
         <button id="hit" class="bg-green-800 text-black rounded-md p-5 text-4xl">Hit</button>
         <button id="miss" class="bg-red-800 text-black rounded-md p-5 text-4xl">Miss</button>
         <button id="back" class="bg-white text-black rounded-md p-5 text-4xl">Back</button>
+        <button id="submit" class="bg-blue-500 text-black rounded-md p-5 text-4xl">Submit</button>
     </div>
     <script src="track.js"></script>
 </body>

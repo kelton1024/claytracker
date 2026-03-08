@@ -23,7 +23,7 @@
         "range_date": {
             "description": "Date/time for when the scores were recorded",
             "type": "string",
-            "format": "date-time"
+            "$comment": "timestamp"
         },
         "station_number": {
             "description": "The station number",

@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
         selectionIndicator: false,
         animation: false,
         geocoder: false,
-        creditContainer: document.createElement('customCredits'),
         sceneMode: SceneMode.SCENE2D
     });
 
