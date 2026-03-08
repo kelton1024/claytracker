@@ -1,13 +1,23 @@
 services:
-  web:
+  backend:
     build:
       context: ./
-      dockerfile: dockerfile
-      image: localhost/claytracker_web:latest
+      dockerfile: dockerfile_backend
+      image: localhost/claytracker_backend:latest
     ports:
       - "8080:8080"
     depends_on:
       - db
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: dockerfile_frontend
+      image: localhost/claytracker_frontend:latest
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
 
   db:
     image: docker.io/postgres:17
