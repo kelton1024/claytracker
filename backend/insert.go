@@ -16,11 +16,12 @@ func insert(station int, scores string) error {
 	if err != nil {
 		return nil
 	}
-	sql := `INSERT INTO scores_tracking (score, station_number) VALUES ($1, $2) `
+	sql := `INSERT INTO scores_tracking (score, station_number) VALUES ($1, $2);`
 	_, err = tx.Exec(ctx, sql, scores, station)
 	if err != nil {
 		return err
 	}
+	tx.Commit(ctx)
 	return nil
 }
 

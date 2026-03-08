@@ -11,7 +11,7 @@ import (
 const (
 	address         = ":8080"
 	db_name         = "range_tracker"
-	rootDatabaseURL = "postgres://postgres:mysecretpassword@localhost:5432"
+	rootDatabaseURL = "postgres://postgres:mysecretpassword@localhost:5432/range_tracker"
 )
 
 // TODO: Create a database struct to hold the connections and that can be used by
