@@ -5,24 +5,31 @@ import (
 	"net/http"
 )
 
-// TODO: read these in from conf/env var
+// TODO: read these in from conf/env var using viper
 const (
-	address = ":8080"
-	db_name = "clays01d"
+	address         = ":8080"
+	db_name         = "range_tracker"
+	rootDatabaseURL = "postgres://postgres:mysecretpassword@localhost:5432"
 )
 
-func loggerMiddleware(endpoint http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Received request from client '%v'\n", r.RemoteAddr)
-		endpoint.ServeHTTP(w, r)
-	})
+// TODO: Add update/delete endpoints and define them
+func registerEndpoints() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/query", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
+	mux.HandleFunc("/insert", loggerMiddleware(http.HandlerFunc(insertEndpoint)))
+	mux.HandleFunc("/login", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
+	mux.HandleFunc("/regsiter", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
+	return mux
 }
 
 func main() {
-	log.Println("Starting API...")
-	mux := http.NewServeMux()
-	// TODO: Add update/delete endpoints and define them
-	// mux.HandleFunc("/query", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
-	// mux.HandleFunc("/insert", loggerMiddleware(http.HandlerFunc(insertEndpoint)))
+	log.Printf("Starting API on port %v", address)
+
+	_, err := NewDBConnection(rootDatabaseURL)
+	if err != nil {
+		log.Fatalf("failed to create DB connection %v", err)
+	}
+
+	mux := registerEndpoints()
 	http.ListenAndServe(address, mux)
 }
