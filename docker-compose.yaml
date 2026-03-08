@@ -24,7 +24,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=postgres # change
-      - POSTGRES_PASSWORD=mysscretpassword # change
+      - POSTGRES_PASSWORD=mysecretpassword # change
       - POSTGRES_DB=range_tracker
     volumes:
       - ./data:/var/lib/postgresql/data:Z

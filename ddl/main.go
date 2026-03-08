@@ -1,4 +1,4 @@
-package main
+pmain
 
 import (
 	"log"

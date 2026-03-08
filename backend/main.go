@@ -65,5 +65,5 @@ func main() {
 
 	log.Printf("Starting API on port %v", config.App.PORT)
 	mux := registerEndpoints()
-	http.ListenAndServe(config.App.PORT, mux)
+	http.ListenAndServe(fmt.Sprintf(":%s",config.App.PORT), mux)
 }

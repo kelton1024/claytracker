@@ -14,4 +14,4 @@ COPY json /app/json
 COPY ddl /app/ddl
 
 WORKDIR /app/backend
-CMD /app/backend/main
+CMD sleep 2 && /app/backend/main
