@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"github.com/jackc/pgx/v5"
 )
 
 // TODO: read these in from conf/env var using viper
@@ -11,6 +13,10 @@ const (
 	db_name         = "range_tracker"
 	rootDatabaseURL = "postgres://postgres:mysecretpassword@localhost:5432"
 )
+
+// TODO: Create a database struct to hold the connections and that can be used by
+// the various endpoints
+var dbConn *pgx.Conn
 
 // TODO: Add update/delete endpoints and define them
 func registerEndpoints() *http.ServeMux {
@@ -25,7 +31,8 @@ func registerEndpoints() *http.ServeMux {
 func main() {
 	log.Printf("Starting API on port %v", address)
 
-	_, err := NewDBConnection(rootDatabaseURL)
+	var err error
+	dbConn, err = NewDBConnection(rootDatabaseURL)
 	if err != nil {
 		log.Fatalf("failed to create DB connection %v", err)
 	}
