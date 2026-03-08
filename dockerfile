@@ -7,17 +7,18 @@ COPY json /app/json
 COPY ddl /app/ddl
 
 WORKDIR /app/backend
-RUN go build -o main main.go
+RUN go build -o /app/backend/main .
+RUN ls -l /app/backend
+RUN export PATH=$PATH:/app/backend
+RUN echo $PATH
+CMD echo 'hello' && ls /app/backend && /app/backend/main
 
-FROM node:25-trixie AS run
-COPY frontend /frontend
-WORKDIR /frontend
-RUN npm install
-
-WORKDIR /app
-COPY --from=build /app/backend/main /app/backend/main
-COPY json /app/json
-COPY ddl /app/ddl
-
-CMD ["./main"]
+#FROM debian:trixie AS run
+#WORKDIR /app
+#COPY --from=build /app/backend/main /app/backend/main
+#COPY json /app/json
+#COPY ddl /app/ddl
+#
+#WORKDIR /app/backend
+#ENTRYPOINT ["/app/backend/main"]
 
