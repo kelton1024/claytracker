@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS scores_tracking CASCADE;
 CREATE TABLE scores_tracking
 (
 	score_id smallint primary key generated always as identity,
-	range_date text,
+	range_date timestamp,
 	score smallint,
 	station_number smallint,
 	contestant_username text references range_contestant(contestant_username),

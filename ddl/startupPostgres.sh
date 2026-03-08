@@ -7,7 +7,7 @@ if [[ "$RUNNING" != "" ]]; then
     podman rm postgres
 fi
 
-podman run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword postgres:14.19
+podman run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword postgres:15.17-trixie
 
 sleep 5
 
