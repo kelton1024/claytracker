@@ -33,7 +33,7 @@
         "score": {
             "description": "The score at a particular station",
             "type": "number",
-            "$comment": "text"
+            "$comment": "smallint"
         }
     }, "required": ["score_id", "contestant_username", "range_id", "range_date", "station_number", "score"],
     "additionalProperties": false
