@@ -105,12 +105,23 @@ function unfocus(){
 }
 
 async function submit(){
-    let scores = []
+    let scores = 0
     for(i = 0; i < 4; i++){
         for(j = 0; j < 2; j++){
-            scores.push(scoreChildren[i].children[j].innerHTML)
+            value = scoreChildren[i].children[j].innerHTML
+            if(value == "NA"){
+                continue
+            }
+
+            // OR and then bit shift to generate an integer
+            scores = scores | parseInt(value)
+            scores = scores << 1
         }
     }
+    // Ideally we wouldn't have this, but it's hard to tell how many clays a station will have
+    // so we'll just do this for now
+    scores = scores >> 1
+
     const url = '/insert'
     try {
         const response = await fetch(url, {
