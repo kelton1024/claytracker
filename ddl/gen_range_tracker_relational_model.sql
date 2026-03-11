@@ -9,7 +9,8 @@ CREATE TABLE range_contestant
 	contestant_username text primary key,
 	contestant_first_name text,
 	contestant_last_name text,
-	contestant_password text
+	contestant_password text,
+	contestant_salt text
 );
 
 ---- Table: ranges
