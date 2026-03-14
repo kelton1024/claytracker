@@ -11,4 +11,4 @@ podman run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword
 
 sleep 5
 
-go run . create
+go run .
