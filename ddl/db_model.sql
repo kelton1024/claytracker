@@ -34,7 +34,6 @@ CREATE TABLE users(
 	zipcode text,
 	state_id smallint,
 	password_hash text,
-	password_salt text,
 	CONSTRAINT fk_state_user FOREIGN KEY (state_id) REFERENCES states(state_id)
 );
 

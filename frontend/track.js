@@ -122,7 +122,7 @@ async function submit(){
     // so we'll just do this for now
     scores = scores >> 1
 
-    const url = '/insert'
+    const url = '/add_score'
     try {
         const response = await fetch(url, {
             method: "POST",

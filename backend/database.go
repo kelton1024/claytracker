@@ -60,3 +60,23 @@ func addRange(name string, address1 string, address2 string, city string, state 
 
 	return nil
 }
+
+func registerUser(username string, firstname string, lastname string, email string, address1 string, address2 string, city string, state string, zipcode string, passHash string) error{
+	ctx := context.Background()
+	tx, err := dbConn.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return err
+	}
+	sql := `INSERT INTO users(username, first_name, last_name, email, address1, address2, city, state_id, zipcode, password_hash) VALUES ($1, $2, $3, $4, $5, $6, $7, (select state_id from states where name=UPPER($8)), $9, $10);`
+	_, err = tx.Exec(ctx, sql, username, firstname, lastname, email, address1, address2, city, state, zipcode, passHash)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

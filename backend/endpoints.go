@@ -5,7 +5,17 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"github.com/alexedwards/argon2id"
+	"runtime"
 )
+
+var encParams = &argon2id.Params {
+	Memory:      64 * 1024,
+	Iterations:  1,
+	Parallelism: uint8(runtime.NumCPU()),
+	SaltLength:  16,
+	KeyLength:   32,
+}
 
 type EndpointData interface {
 	Validate() (EndpointData, error)
@@ -44,9 +54,62 @@ func (r RangeData) HandleDatabase() error {
 func addRangeEndpoint(w http.ResponseWriter, r *http.Request){
 	addEndpoint(&RangeData{},w,r)
 }
+// ----- END RANGE -----
+
+// ----- USER -----
+type UserData struct {
+	Username string `json:"username"`
+	FirstName string `json:"firstname"`
+	LastName string `json:"lastname"`
+	Email string `json:"email"`
+	Address1 string `json:"address1"`
+	Address2 string `json:"address2"`
+	City string `json:"city"`
+	State string `json:"state"`
+	Zipcode string `json:"zipcode"`
+	Password string `json:"password"`
+}
+//TODO: validate user input
+func (u UserData) Validate() (EndpointData, error){
+	return u, nil
+}
+
+func (u UserData) HandleDatabase() error{
+	passHash,err := argon2id.CreateHash(u.Password, encParams)
+	if err != nil {
+		return err
+	}
+	//TODO: this can be removed after verification that its working
+	match,err := argon2id.ComparePasswordAndHash(u.Password,passHash)
+	if err != nil {
+		return err
+	}
+	if !match {
+		return fmt.Errorf("Passowrd verificatin error")
+	}
+
+	return registerUser(
+	u.Username,
+	u.FirstName,
+	u.LastName,
+	u.Email,
+	u.Address1,
+	u.Address2,
+	u.City,
+	u.State,
+	u.Zipcode,
+	passHash)
+}
+func registerUserEndpoint(w http.ResponseWriter, r *http.Request) {
+	addEndpoint(&UserData{},w,r)
+}
+// ----- END USER -----
+
+
 
 //  -----  SCORE  -----
 type ScoreData struct {
+	// TODO: fix score struct to reflect data model
 	Station int `json:"course"`
 	Scores  int `json:"score"`
 }
@@ -61,6 +124,7 @@ func (s ScoreData) HandleDatabase() error{
 func addScoreEndpoint(w http.ResponseWriter, r *http.Request) {
 	addEndpoint(&ScoreData{},w,r)
 }
+// ----- END SCORE -----
 
 func addEndpoint(e EndpointData, w http.ResponseWriter, r *http.Request){
 	decode := json.NewDecoder(r.Body)
@@ -87,7 +151,7 @@ func addEndpoint(e EndpointData, w http.ResponseWriter, r *http.Request){
 }
 
 
-// -----  NEED SIMILAR FOR RETREIVING DATA -----
+// -----  TODO: NEED SIMILAR METHOD AS ABOVE FOR RETREIVING DATA -----
 
 func queryEndpoint(w http.ResponseWriter, r *http.Request) {
 	requestBody := struct {
