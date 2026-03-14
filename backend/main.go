@@ -1,17 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-	"fmt"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/spf13/viper"
 )
 
-type Config struct{
+type Config struct {
 	App struct {
-		PORT     string
+		PORT string
 	}
 	Database struct {
 		HOST     string
@@ -21,7 +21,6 @@ type Config struct{
 		PASSWORD string
 	}
 }
-
 
 var dbConn *pgx.Conn
 
@@ -46,14 +45,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error reading config file: %v", err)
 	}
-	
+
 	// Get values that match config struct from file
 	var config Config
 	err = viper.Unmarshal(&config)
 	if err != nil {
 		log.Fatalf("Error reading config file: %v", err)
 	}
-
 
 	log.Printf("Connecting to datatbase at %s:%s as %s", config.Database.HOST, config.Database.PORT, config.Database.USER)
 	rootDatabaseURL := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", config.Database.USER, config.Database.PASSWORD, config.Database.HOST, config.Database.PORT, config.Database.NAME)
@@ -65,5 +63,5 @@ func main() {
 
 	log.Printf("Starting API on port %v", config.App.PORT)
 	mux := registerEndpoints()
-	http.ListenAndServe(fmt.Sprintf(":%s",config.App.PORT), mux)
+	http.ListenAndServe(fmt.Sprintf(":%s", config.App.PORT), mux)
 }
