@@ -1,9 +1,6 @@
-app:
-  port: 8080
-
-database:
-  host: claytracker_db_1
-  port: 5432
-  name: range_tracker
-  user: postgres
-  password: mysecretpassword
+AppPort: 8080
+Host: localhost
+DBPort: 5432
+Name: range_tracker
+User: postgres
+Password: mysecretpassword
