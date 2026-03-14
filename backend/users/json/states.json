@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "us_states",
+    "title": "States",
+    "description": "Validates that the states are returned in a consistent format",
+    "type": "object",
+    "properties": {
+        "state_id": {
+            "description": "Unique ID associated to state",
+            "type": "number",
+            "$comment": "smallint primary key generated always as identity"
+        },
+        "state_full_name": {
+            "description": "Full name of state",
+            "type": "string"
+        },
+        "state_abbreviation": {
+            "description": "Abbreviation of state",
+            "type": "string",
+            "$comment": "char(2)"
+        }
+    }, "required": ["state_id", "state_full_name", "state_abbreviation"],
+    "additionalProperties": false
+}
