@@ -28,9 +28,10 @@ var dbConn *pgx.Conn
 func registerEndpoints() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/query", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
-	mux.HandleFunc("/insert", loggerMiddleware(http.HandlerFunc(insertEndpoint)))
+	mux.HandleFunc("/insert", loggerMiddleware(http.HandlerFunc(addScoreEndpoint)))
 	mux.HandleFunc("/login", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
 	mux.HandleFunc("/regsiter", loggerMiddleware(http.HandlerFunc(queryEndpoint)))
+	mux.HandleFunc("/add_range", loggerMiddleware(http.HandlerFunc(addRangeEndpoint)))
 	return mux
 }
 
