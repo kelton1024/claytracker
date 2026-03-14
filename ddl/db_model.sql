@@ -21,7 +21,7 @@ CREATE TABLE ranges(
 	CONSTRAINT fk_state_range FOREIGN KEY (state_id) REFERENCES states(state_id)
 );
 
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users(
 	user_id smallint primary key generated always as identity,
 	username text,
@@ -30,6 +30,7 @@ CREATE TABLE users(
 	email text,
 	address1 text,
 	address2 text,
+	city text,
 	zipcode text,
 	state_id smallint,
 	password_hash text,
@@ -55,7 +56,7 @@ CREATE TABLE stations(
 	CONSTRAINT fk_range_station FOREIGN KEY (range_id) REFERENCES ranges(range_id)
 );
 
-DROP TABLE IF EXISTS groupings;
+DROP TABLE IF EXISTS groupings CASCADE;
 CREATE TABLE groupings(
 	groups_id smallint primary key generated always as identity,
 	outing_id smallint,
