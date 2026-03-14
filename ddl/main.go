@@ -9,7 +9,7 @@ const (
 	outputFileName  = "gen_range_tracker_relational_model.sql"
 	jsonDirectory   = "../json/"
 	databaseName    = "range_tracker"
-	rootDatabaseURL = "postgres://postgres:mysecretpassword@localhost:5432"
+	rootDatabaseURL = "postgres://postgres:mysecretpassword@claytracker_db_1:5432"
 )
 
 func main() {

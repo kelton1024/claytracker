@@ -1,3 +1,6 @@
+DROP DATABASE IF EXISTS range_tracker;
+CREATE DATABASE range_tracker;
+
 DROP TABLE IF EXISTS states CASCADE;
 CREATE TABLE states (
 	state_id smallint primary key generated always as identity,
@@ -11,7 +14,7 @@ CREATE TABLE ranges(
 	address2 text,
 	city text,
 	name text,
-	zipcode numeric(5),
+	zipcode text,
 	state_id smallint,
 	lat float,
 	lng float,
@@ -27,7 +30,7 @@ CREATE TABLE users(
 	email text,
 	address1 text,
 	address2 text,
-	zipcode numeric(5),
+	zipcode text,
 	state_id smallint,
 	password_hash text,
 	password_salt text,
