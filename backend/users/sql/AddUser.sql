@@ -1,0 +1,1 @@
+INSERT INTO users(username, first_name, last_name, email, address1, address2, city, state_id, zipcode, password_hash) VALUES ($1, $2, $3, $4, $5, $6, $7, (select state_id from states where name=UPPER($8)), $9, $10);

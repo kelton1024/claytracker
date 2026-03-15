@@ -29,7 +29,7 @@ func (sr *ScoreRepository) AddScore(ctx context.Context, scoreData *scoreAddRequ
 		return err
 	}
 	fmt.Println(scoreData)
-	sql := `INSERT INTO scores_tracking (score, station_number) VALUES ($1, $2);`
+	sql := sr.sqlData["AddScore"]
 	_, err = tx.Exec(ctx, sql, scoreData.Scores, scoreData.Station)
 	if err != nil {
 		rbErr := tx.Rollback(ctx)
@@ -64,7 +64,7 @@ func (sr *ScoreRepository) loadSQLFiles(sqlBaseDir string) error {
 		if err != nil {
 			return err
 		}
-		sr.sqlData["AddRange"] = string(sql)
+		sr.sqlData["AddScore"] = string(sql)
 	}
 	return nil
 }

@@ -1,5 +1,5 @@
 AppPort: 8080
-Host: localhost
+Host: claytracker_db_1
 DBPort: 5432
 Name: range_tracker
 User: postgres

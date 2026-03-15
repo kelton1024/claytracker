@@ -3,6 +3,7 @@ package main
 import (
 	"backend/ranges"
 	"backend/scores"
+	"backend/users"
 	"context"
 	"fmt"
 	"log"
@@ -35,7 +36,11 @@ func main() {
 		log.Fatalf("failed to start the score service %v", err)
 	}
 
-	// TODO: Register user related endpoints
+	// Register user related endpoints
+	err = users.NewUserHandler(mux, conn)
+	if err != nil {
+		log.Fatalf("failed to start the user service %v", err)
+	}
 
 	log.Printf("Starting API on port %v", config.AppPort)
 	http.ListenAndServe(fmt.Sprintf(":%s", config.AppPort), mux)

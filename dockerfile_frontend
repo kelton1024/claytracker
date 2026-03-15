@@ -1,7 +1,6 @@
 FROM node:25-trixie
 
 COPY frontend /app/frontend
-COPY json /app/json
 COPY ddl /app/ddl
 
 WORKDIR /app/frontend
