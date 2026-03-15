@@ -1,16 +1,14 @@
 FROM golang:1.26-trixie AS build
 
 COPY backend /app/backend
-COPY json /app/json
 COPY ddl /app/ddl
 
 WORKDIR /app/backend
 RUN go build -o /app/backend/main .
+RUN find . -name "*.go" -type f -delete
 
 FROM debian:trixie-slim AS run
-COPY --from=build /app/backend/main /app/backend/main
-COPY backend/config.yaml /app/backend/config.yaml
-COPY json /app/json
+COPY --from=build /app/backend /app/backend
 COPY ddl /app/ddl
 
 WORKDIR /app/backend

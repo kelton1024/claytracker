@@ -1,48 +1,62 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"os"
+
+	"github.com/jackc/pgx/v5"
 )
 
 const (
-	outputFileName  = "gen_range_tracker_relational_model.sql"
-	jsonDirectory   = "../json/"
-	databaseName    = "range_tracker"
-	rootDatabaseURL = "postgres://postgres:mysecretpassword@claytracker_db_1:5432"
+	outputFileName   = "gen_range_tracker_relational_model.sql"
+	jsonDirectory    = "../json/"
+	databaseName     = "range_tracker"
+	rootDatabaseURL  = "postgres://postgres:mysecretpassword@localhost:5432"
+	createDBFile     = "createDatabase.sql"
+	createTablesFile = "createTables.sql"
 )
 
 func main() {
-	args := os.Args[1:]
-	action := args[0]
+	conn, err := pgx.Connect(context.Background(), rootDatabaseURL)
+	if err != nil {
+		log.Fatalf("failed to connect to PG %v", err)
+	}
 
-	switch action {
-	case "generate":
-		outputFile, err := os.Create(outputFileName)
-		if err != nil {
-			log.Fatalf("failed to create output file with the following error %v", err)
-		}
+	// Drop database
+	dropDDL := fmt.Sprintf(`DROP DATABASE IF EXISTS %v`, databaseName)
+	cmdTag, err := conn.Exec(context.Background(), dropDDL)
+	if err != nil {
+		log.Fatalf("failed to connect to create database %v", err)
+	}
+	fmt.Println(cmdTag)
 
-		ddlSlice, err := generateDDL()
-		if err != nil {
-			log.Fatalf("failed to create DDL with the following error %v", err)
-		}
+	// Create database
+	createDDL := fmt.Sprintf(`CREATE DATABASE %v;`, databaseName)
+	cmdTag, err = conn.Exec(context.Background(), createDDL)
+	if err != nil {
+		log.Fatalf("failed to connect to create database %v", err)
+	}
+	fmt.Println(cmdTag)
 
-		for _, sql := range ddlSlice {
-			outputFile.Write([]byte(sql))
-		}
+	// Reconnect to the range database
+	rangeDatabaseURL := fmt.Sprintf("postgres://postgres:mysecretpassword@localhost:5432/%v", databaseName)
+	conn, err = pgx.Connect(context.Background(), rangeDatabaseURL)
+	if err != nil {
+		log.Fatalf("failed to connect to database '%v' %v", databaseName, err)
+	}
 
-	case "create":
-		ddlSlice, err := generateDDL()
-		if err != nil {
-			log.Fatalf("failed to create DDL with the following error %v", err)
-		}
+	// Create all of the tables
+	createTableSql, err := os.ReadFile(createTablesFile)
+	cmdTag, err = conn.Exec(context.Background(), string(createTableSql))
+	if err != nil {
+		log.Fatalf("failed to connect to create tables %v", err)
+	}
+	fmt.Println(cmdTag)
 
-		err = createDatabase(ddlSlice)
-		if err != nil {
-			log.Fatalf("failed to create database with the following error %v", err)
-		}
-	default:
-		log.Fatalf("invalid option was provided")
+	err = conn.Close(context.Background())
+	if err != nil {
+		log.Fatalf("failed to close database connection %v", err)
 	}
 }

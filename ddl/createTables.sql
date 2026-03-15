@@ -1,6 +1,3 @@
-DROP DATABASE IF EXISTS range_tracker;
-CREATE DATABASE range_tracker;
-
 DROP TABLE IF EXISTS states CASCADE;
 CREATE TABLE states (
 	state_id smallint primary key generated always as identity,

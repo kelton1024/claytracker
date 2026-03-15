@@ -1,0 +1,6 @@
+{
+    "$schema": "./states.json",
+    "state_id": 0,
+    "state_full_name": "California",
+    "state_abbreviation": "CA"
+}
